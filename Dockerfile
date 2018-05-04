@@ -12,6 +12,7 @@ RUN make all
 RUN make install
 RUN mkdir /root/.urlwatch
 
+RUN rm /root/urlwatch -R
 
 COPY crontab /var/spool/cron/crontabs/root
 CMD urlwatch 
