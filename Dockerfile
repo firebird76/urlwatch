@@ -1,6 +1,13 @@
-FROM alpine:edge
+FROM ubuntu
 
-RUN apk add --update git lua-dev gcc make openssl-dev pcre-dev g++ 
+RUN apt-get update
+RUN apt-get install python3-pip git --yes
+
+RUN python3 -m pip install  --upgrade pip
+
+RUN python3 -m pip install pyyaml minidb requests keyring appdirs
+RUN python3 -m pip install chump
+
 
 WORKDIR /root
 
@@ -8,11 +15,9 @@ RUN git clone https://github.com/thp/urlwatch.git
 
 WORKDIR /root/urlwatch
 
-RUN make all
-RUN make install
-RUN mkdir /root/.urlwatch
 
-RUN rm /root/urlwatch -R
+
+
 
 COPY crontab /var/spool/cron/crontabs/root
 CMD urlwatch 
