@@ -11,4 +11,4 @@ CMD urlwatch
 
 VOLUME /root
 
-CMD ["crond", "-f", "-l", "0", "-d", "0"]
+CMD ["cron", "-f"]
