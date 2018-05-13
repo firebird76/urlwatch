@@ -1,2 +1,2 @@
-*/15 * * * * urlwatch 
-
+*/15 * * * * root urlwatch 
+* 19 * * * root apt-get-update && apt-get dist-upgrade -y

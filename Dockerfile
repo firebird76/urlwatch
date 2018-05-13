@@ -5,7 +5,7 @@ RUN python3 -m pip install  --upgrade pip
 RUN python3 -m pip install pyyaml minidb requests keyring appdirs
 WORKDIR /root
 
-COPY crontab /var/spool/cron/crontabs/root
+COPY crontab /etc/cron.d/crontab
 
 CMD urlwatch 
 
