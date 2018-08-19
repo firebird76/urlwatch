@@ -10,5 +10,6 @@ COPY crontab /etc/cron.d/crontab
 CMD urlwatch 
 
 VOLUME /root
+VOLUME /var/log 
 
 CMD ["cron", "-f"]
