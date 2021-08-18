@@ -48,9 +48,6 @@ RUN crontab /var/spool/cron/crontabs/root
 RUN service cron start
 
 
-
-
-
 WORKDIR /root
 
 CMD urlwatch 
