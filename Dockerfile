@@ -1,11 +1,11 @@
 # set the base image
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 # author
 #MAINTAINER Tobias Scharlewsky
 
 LABEL maintainer="dev@scharlewsky.de"
-LABEL build_date="2021-08-18"
+LABEL build_date="2021-09-24"
 # update sources list
 RUN apt-get clean
 RUN apt-get update
