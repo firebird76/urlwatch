@@ -30,6 +30,7 @@ RUN apt-get install -y python3-pip
 RUN python3 -m pip install  --upgrade pip
 RUN python3 -m pip install pyyaml minidb requests keyring appdirs
 RUN pip3 install --upgrade urlwatch
+RUN pip3 install keyrings.alt
 
 # cleanup
 RUN apt-get -qy autoremove
