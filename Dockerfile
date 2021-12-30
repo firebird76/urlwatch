@@ -5,7 +5,7 @@ FROM debian:bullseye-slim
 #MAINTAINER Tobias Scharlewsky
 
 LABEL maintainer="dev@scharlewsky.de"
-LABEL build_date="2021-12-01"
+LABEL build_date="2021-12-30"
 # update sources list
 RUN apt-get clean
 RUN apt-get update
