@@ -5,7 +5,9 @@ FROM debian:bullseye-slim
 #MAINTAINER Tobias Scharlewsky
 
 LABEL maintainer="dev@scharlewsky.de"
-LABEL build_date="2022-02-04"
+LABEL build_date="2022-04-23"
+LABEL name="urlwatch"
+
 # update sources list
 RUN apt-get clean
 RUN apt-get update
@@ -14,7 +16,7 @@ RUN apt-get dist-upgrade -y
 # install basic apps, one per line for better caching
 RUN apt-get install -y cron
 RUN apt-get install -y locales
- 
+
 # Set the locale
 RUN sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen
@@ -23,12 +25,11 @@ ENV LANGUAGE de_DE:de
 ENV LC_ALL de_DE.UTF-8  
 
 # install app runtimes and modules
-RUN apt-get install -y urlwatch 
+#RUN apt-get install -y urlwatch 
 RUN apt-get install -y python3-pip
 
-
-RUN python3 -m pip install  --upgrade pip
 RUN python3 -m pip install pyyaml minidb requests keyring appdirs
+RUN python3 -m pip install  --upgrade pip
 RUN pip3 install --upgrade urlwatch
 RUN pip3 install keyrings.alt
 
