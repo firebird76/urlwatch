@@ -5,7 +5,7 @@ FROM debian:bullseye-slim
 #MAINTAINER Tobias Scharlewsky
 
 LABEL maintainer="dev@scharlewsky.de"
-LABEL build_date="2022-08-23"
+LABEL build_date="2022-11-11"
 LABEL name="urlwatch"
 
 # update sources list
