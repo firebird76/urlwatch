@@ -1,11 +1,11 @@
 # set the base image
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 # author
 #MAINTAINER Tobias Scharlewsky
 
 LABEL maintainer="dev@scharlewsky.de"
-LABEL build_date="2022-11-11"
+LABEL build_date="2023-09-30"
 LABEL name="urlwatch"
 
 # update sources list
