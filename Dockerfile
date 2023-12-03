@@ -1,11 +1,11 @@
 # set the base image
-FROM debian:bullseye-slim
+FROM debian:trixie-slim
 
 # author
 #MAINTAINER Tobias Scharlewsky
 
 LABEL maintainer="dev@scharlewsky.de"
-LABEL build_date="2023-09-30"
+LABEL build_date="2023-12-03"
 LABEL name="urlwatch"
 
 # update sources list
@@ -25,13 +25,13 @@ ENV LANGUAGE de_DE:de
 ENV LC_ALL de_DE.UTF-8  
 
 # install app runtimes and modules
-#RUN apt-get install -y urlwatch 
-RUN apt-get install -y python3-pip
+RUN apt-get install -y urlwatch 
+#RUN apt-get install -y python3-pip
 
-RUN python3 -m pip install pyyaml minidb requests keyring appdirs
-RUN python3 -m pip install  --upgrade pip
-RUN pip3 install --upgrade urlwatch
-RUN pip3 install keyrings.alt
+#RUN python3 -m pip install pyyaml minidb requests keyring appdirs
+#RUN python3 -m pip install  --upgrade pip
+#RUN pip3 install --upgrade urlwatch
+#RUN pip3 install keyrings.alt
 
 # cleanup
 RUN apt-get -qy autoremove
