@@ -5,7 +5,7 @@ FROM debian:trixie-slim
 #MAINTAINER Tobias Scharlewsky
 
 LABEL maintainer="dev@scharlewsky.de"
-LABEL build_date="2023-12-03"
+LABEL build_date="2024-03-04"
 LABEL name="urlwatch"
 
 # update sources list
