@@ -1,2 +1,2 @@
-*/15 * * * * /usr/local/bin/urlwatch -v >> /var/log/urlwatch.log 2>&1
+*/15 * * * * /usr/local/bin/urlwatch -v >> /dev/stdout 2>&1
 0 2  * * *  /usr/bin/apt-get update && /usr/bin/apt-get dist-upgrade -y
