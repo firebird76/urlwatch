@@ -16,6 +16,7 @@ RUN apt-get dist-upgrade -y
 # install basic apps, one per line for better caching
 RUN apt-get install -y cron
 RUN apt-get install -y locales
+RUN apt-get install -y nano
 
 # Set the locale
 RUN sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -35,6 +36,7 @@ RUN apt-get install -y urlwatch
 
 # cleanup
 RUN apt-get -qy autoremove
+RUN apt-get clean
 
 # locales to UTF-8
 RUN  /usr/sbin/update-locale LANG=de_DE.UTF-8
