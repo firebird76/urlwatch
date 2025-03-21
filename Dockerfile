@@ -16,7 +16,6 @@ RUN apt-get dist-upgrade -y
 # install basic apps, one per line for better caching
 RUN apt-get install -y cron
 RUN apt-get install -y locales
-RUN apt-get install -y nano
 
 # Set the locale
 RUN sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -28,6 +27,7 @@ ENV LC_ALL=de_DE.UTF-8
 # install app runtimes and modules
 RUN apt-get install -y urlwatch 
 #RUN apt-get install -y python3-pip
+RUN apt-get install -y nano
 
 #RUN python3 -m pip install pyyaml minidb requests keyring appdirs
 #RUN python3 -m pip install  --upgrade pip
