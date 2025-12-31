@@ -1,6 +1,7 @@
 version: "3.7"
 services:
   urlwatch:
+    image: ghcr.io/firebird76/urlwatch:latest
     build: .
     volumes:
        - /volume2/docker/urlwatch/log:/var/log/
