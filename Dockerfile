@@ -1,60 +1,44 @@
-# set the base image
-FROM debian:trixie-slim
+# Basis-Image: Alpine ist deutlich kleiner (~5MB)
+FROM alpine:latest
 
-# author
-#MAINTAINER Tobias Scharlewsky
+LABEL maintainer="dev@scharlewsky.de" \
+      build_date="2025-02-15" \
+      name="urlwatch-alpine"
 
-LABEL maintainer="dev@scharlewsky.de"
-LABEL build_date="2025-02-15"
-LABEL name="urlwatch"
+# Umgebungsvariablen setzen
+# Hinweis: Alpine nutzt musl, Locales funktionieren dort etwas anders als in Debian.
+# Für die meisten Python-Apps reicht die UTF-8 Einstellung.
+ENV LANG=de_DE.UTF-8 \
+    LANGUAGE=de_DE:de \
+    LC_ALL=de_DE.UTF-8 \
+    TZ=Europe/Berlin
 
-# update sources list
-RUN apt-get clean
-RUN apt-get update
-RUN apt-get dist-upgrade -y
+# Installation der Pakete
+# In Alpine gibt es urlwatch oft direkt im Repository (Community Branch)
+RUN apk add --no-cache \
+    python3 \
+    py3-pip \
+    urlwatch \
+    tzdata \
+    nano \
+    bash
 
-# install basic apps, one per line for better caching
-RUN apt-get install -y cron
-RUN apt-get install -y locales
+# Zeitzone einstellen
+RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
 
-# Set the locale
-RUN sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
-    locale-gen
-ENV LANG=de_DE.UTF-8  
-ENV LANGUAGE=de_DE:de  
-ENV LC_ALL=de_DE.UTF-8  
-
-# install app runtimes and modules
-RUN apt-get install -y urlwatch 
-#RUN apt-get install -y python3-pip
-RUN apt-get install -y nano
-
-#RUN python3 -m pip install pyyaml minidb requests keyring appdirs
-#RUN python3 -m pip install  --upgrade pip
-#RUN pip3 install --upgrade urlwatch
-#RUN pip3 install keyrings.alt
-
-# cleanup
-RUN apt-get -qy autoremove
-RUN apt-get clean
-
-# locales to UTF-8
-RUN  /usr/sbin/update-locale LANG=de_DE.UTF-8
-ENV LC_ALL=de_DE.UTF-8
-
-#VOLUME root:./root/
-LABEL name="urlwatch"
-
-RUN echo "Europe/Berlin" > /etc/timezone    
-RUN dpkg-reconfigure -f noninteractive tzdata
+# Cron-Konfiguration
+# Alpine nutzt BusyBox Cron. Die Spool-Dateien liegen unter /var/spool/cron/crontabs/
 COPY crontab /var/spool/cron/crontabs/root
-RUN crontab /var/spool/cron/crontabs/root
-RUN service cron start
-
+RUN chmod 0600 /var/spool/cron/crontabs/root
 
 WORKDIR /root
 
-VOLUME /root
-VOLUME /var/log 
+# Volumes für Persistenz
+VOLUME ["/root", "/var/log"]
 
-CMD ["cron", "-f"]
+# BusyBox Cron im Vordergrund starten
+# -f: Vordergrund
+# -l 2: Log-Level (Standard)
+# -L /dev/stderr: Logs nach stderr leiten, damit 'docker logs' sie sieht
+CMD ["crond", "-f", "-l", "2", "-L", "/dev/stderr"]
