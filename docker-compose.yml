@@ -3,8 +3,13 @@ services:
   urlwatch:
     image: ghcr.io/firebird76/urlwatch:latest
     build: .
+    container_name: urlwatch
+    restart: unless-stopped
+    environment:
+      - SMTP_PASS=${MY_SECRET_PASSWORD}
     volumes:
        - /volume2/docker/urlwatch/log:/var/log/
        - /volume2/docker/urlwatch/root:/root/
+       - /etc/localtime:/etc/localtime:ro
 
 

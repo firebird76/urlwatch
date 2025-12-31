@@ -1,9 +1,15 @@
 #!/bin/bash
-# Ersetzt den Platzhalter in der Config durch die Umgebungsvariable
-if [ ! -z "$SMTP_PASSWORD" ]; then
-    sed -i "s/password: .*/password: \"$SMTP_PASSWORD\"/" /root/.urlwatch/urlwatch.yaml
-    sed -i "s/insecure_password: .*/insecure_password: true/" /root/.urlwatch/urlwatch.yaml
+set -e
+
+CONFIG="/root/.urlwatch/urlwatch.yaml"
+
+# Nur wenn die Umgebungsvariable gesetzt ist
+if [ ! -z "$SMTP_PASS" ]; then
+    echo "Konfiguriere SMTP-Passwort..."
+    # Setzt das Passwort und aktiviert den 'insecure' Modus für die Session
+    sed -i "s/^    password: .*/    password: \"$SMTP_PASS\"/" "$CONFIG"
+    sed -i "s/^    insecure_password: .*/    insecure_password: true/" "$CONFIG"
 fi
 
-# Führt den eigentlichen Befehl (cron) aus
+# Führt den normalen Startbefehl (cron) aus
 exec "$@"
