@@ -29,6 +29,7 @@ RUN apk add --no-cache \
     py3-wheel
 
 RUN python3 -m venv /opt/venv
+RUN pip install keyrings.alt
 ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install --no-cache-dir urlwatch
 
