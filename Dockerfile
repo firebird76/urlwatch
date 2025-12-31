@@ -50,4 +50,8 @@ VOLUME ["/root", "/var/log"]
 # -f: Vordergrund
 # -l 2: Log-Level (Standard)
 # -L /dev/stderr: Logs nach stderr leiten, damit 'docker logs' sie sieht
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["crond", "-f", "-l", "2", "-L", "/dev/stderr"]
