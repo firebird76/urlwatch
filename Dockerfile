@@ -18,10 +18,19 @@ ENV LANG=de_DE.UTF-8 \
 RUN apk add --no-cache \
     python3 \
     py3-pip \
-    urlwatch \
     tzdata \
     nano \
-    bash
+    bash \
+    libxml2-dev \
+    libxslt-dev \
+    gcc \
+    musl-dev \
+    python3-dev \
+    py3-wheel
+
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --no-cache-dir urlwatch
 
 # Zeitzone einstellen
 RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && \
