@@ -1,44 +1,52 @@
-# Basis-Image: Alpine ist deutlich kleiner (~5MB)
-FROM alpine:latest
+# set the base image
+FROM debian:trixie-slim
 
-LABEL maintainer="dev@scharlewsky.de" \
-      build_date="2025-02-15" \
-      name="urlwatch-alpine"
+# author
+#MAINTAINER Tobias Scharlewsky
 
-# Umgebungsvariablen setzen
-# Hinweis: Alpine nutzt musl, Locales funktionieren dort etwas anders als in Debian.
-# Für die meisten Python-Apps reicht die UTF-8 Einstellung.
-ENV LANG=de_DE.UTF-8 \
-    LANGUAGE=de_DE:de \
-    LC_ALL=de_DE.UTF-8 \
-    TZ=Europe/Berlin
+LABEL maintainer="dev@scharlewsky.de"
+LABEL build_date="2026-01-01"
+LABEL name="urlwatch"
 
-# Installation der Pakete
-# In Alpine gibt es urlwatch oft direkt im Repository (Community Branch)
-RUN apk add --no-cache \
-    python3 \
-    py3-pip \
-    tzdata \
-    nano \
-    bash \
-    libxml2-dev \
-    libxslt-dev \
-    gcc \
-    musl-dev \
-    python3-dev \
-    py3-wheel
+# update sources list
+RUN apt-get clean
+RUN apt-get update
+RUN apt-get dist-upgrade -y
 
-RUN python3 -m venv /opt/venv
-RUN pip install keyrings.alt
-ENV PATH="/opt/venv/bin:$PATH"
-RUN pip install --no-cache-dir urlwatch
+# install basic apps, one per line for better caching
+RUN apt-get install -y cron
+RUN apt-get install -y locales
 
-# Zeitzone einstellen
-RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && \
-    echo $TZ > /etc/timezone
+# Set the locale
+RUN sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
+    locale-gen
+ENV LANG=de_DE.UTF-8  
+ENV LANGUAGE=de_DE:de  
+ENV LC_ALL=de_DE.UTF-8  
 
-# Cron-Konfiguration
-# Alpine nutzt BusyBox Cron. Die Spool-Dateien liegen unter /var/spool/cron/crontabs/
+# install app runtimes and modules
+RUN apt-get install -y urlwatch 
+#RUN apt-get install -y python3-pip
+RUN apt-get install -y nano
+
+#RUN python3 -m pip install pyyaml minidb requests keyring appdirs
+#RUN python3 -m pip install  --upgrade pip
+#RUN pip3 install --upgrade urlwatch
+#RUN pip3 install keyrings.alt
+
+# cleanup
+RUN apt-get -qy autoremove
+RUN apt-get clean
+
+# locales to UTF-8
+RUN  /usr/sbin/update-locale LANG=de_DE.UTF-8
+ENV LC_ALL=de_DE.UTF-8
+
+#VOLUME root:./root/
+LABEL name="urlwatch"
+
+RUN echo "Europe/Berlin" > /etc/timezone    
+RUN dpkg-reconfigure -f noninteractive tzdata
 COPY crontab /var/spool/cron/crontabs/root
 RUN chmod 0600 /var/spool/cron/crontabs/root
 
