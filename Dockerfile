@@ -8,51 +8,27 @@ LABEL maintainer="dev@scharlewsky.de"
 LABEL build_date="2026-01-01"
 LABEL name="urlwatch"
 
-# update sources list
-RUN apt-get clean
-RUN apt-get update
-RUN apt-get dist-upgrade -y
+RUN apt-get update && apt-get dist-upgrade -y && \
+    apt-get install -y --no-install-recommends \
+    cron \
+    locales \
+    urlwatch \
+    nano \
+    tzdata && \
+    # Locales generieren
+    sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
+    locale-gen && \
+    # Cleanup: Entfernt temporäre Dateien sofort im selben Layer
+    apt-get purge -y --auto-remove && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# install basic apps, one per line for better caching
-RUN apt-get install -y cron
-RUN apt-get install -y locales
-
-# Set the locale
-RUN sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
-    locale-gen
-ENV LANG=de_DE.UTF-8  
-ENV LANGUAGE=de_DE:de  
-ENV LC_ALL=de_DE.UTF-8  
-
-# install app runtimes and modules
-RUN apt-get install -y urlwatch 
-#RUN apt-get install -y python3-pip
-RUN apt-get install -y nano
-
-#RUN python3 -m pip install pyyaml minidb requests keyring appdirs
-#RUN python3 -m pip install  --upgrade pip
-#RUN pip3 install --upgrade urlwatch
-#RUN pip3 install keyrings.alt
-
-# cleanup
-RUN apt-get -qy autoremove
-RUN apt-get clean
-
-# locales to UTF-8
-RUN  /usr/sbin/update-locale LANG=de_DE.UTF-8
-ENV LC_ALL=de_DE.UTF-8
-
-#VOLUME root:./root/
-LABEL name="urlwatch"
-
-RUN echo "Europe/Berlin" > /etc/timezone    
-RUN dpkg-reconfigure -f noninteractive tzdata
 COPY crontab /var/spool/cron/crontabs/root
 RUN chmod 0600 /var/spool/cron/crontabs/root
 
 WORKDIR /root
 
-# Volumes für Persistenz
-VOLUME ["/root", "/var/log"]
+VOLUME ["/root/.urlwatch", "/var/log"]
 
 CMD ["cron", "-f"]
+
