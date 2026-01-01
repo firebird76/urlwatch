@@ -55,4 +55,4 @@ WORKDIR /root
 # Volumes für Persistenz
 VOLUME ["/root", "/var/log"]
 
-CMD ["crond", "-f", "-l", "2", "-L", "/dev/stderr"]
+CMD ["cron", "-f"]
