@@ -48,13 +48,19 @@ LABEL name="urlwatch"
 RUN echo "Europe/Berlin" > /etc/timezone    
 RUN dpkg-reconfigure -f noninteractive tzdata
 COPY crontab /var/spool/cron/crontabs/root
-RUN crontab /var/spool/cron/crontabs/root
-RUN service cron start
-
+RUN chmod 0600 /var/spool/cron/crontabs/root
 
 WORKDIR /root
 
-VOLUME /root
-VOLUME /var/log 
+# Volumes für Persistenz
+VOLUME ["/root", "/var/log"]
 
-CMD ["cron", "-f"]
+# BusyBox Cron im Vordergrund starten
+# -f: Vordergrund
+# -l 2: Log-Level (Standard)
+# -L /dev/stderr: Logs nach stderr leiten, damit 'docker logs' sie sieht
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["crond", "-f", "-l", "2", "-L", "/dev/stderr"]
