@@ -28,7 +28,7 @@ RUN chmod 0600 /var/spool/cron/crontabs/root
 
 WORKDIR /root
 
-VOLUME ["/root/.urlwatch", "/var/log"]
+VOLUME ["/root/", "/var/log"]
 
 CMD ["cron", "-f"]
 
