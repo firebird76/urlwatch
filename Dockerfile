@@ -5,7 +5,7 @@ FROM debian:trixie-slim
 #MAINTAINER Tobias Scharlewsky
 
 LABEL maintainer="dev@scharlewsky.de"
-LABEL build_date="2026-10-08"
+LABEL build_date="2026-11-15"
 LABEL name="urlwatch"
 
 RUN apt-get update && apt-get dist-upgrade -y && \
